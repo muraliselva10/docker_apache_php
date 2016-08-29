@@ -1,13 +1,18 @@
 # docker_apache_php
-Building a customized Docker Image - Apache and PHP - Supported in Openstack also(nova-docker)
 
-First Create a following Directory Structure:
+##Building a customized Docker Image - Apache and PHP - Supported in Openstack also(nova-docker)
 
+###First Create a following Directory Structure:
+
+```
 ./Dockerfile
 ./apache-config.conf
 ./www/index.php
-Dockerfile contains should be as follows:
+```
 
+###Dockerfile contains should be as follows:
+
+```
 FROM ubuntu:latest
 MAINTAINER Murali muralidharans@infinite.com
 
@@ -41,12 +46,11 @@ ADD apache-config.conf /etc/apache2/sites-enabled/000-default.conf
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
 CMD /usr/sbin/apache2ctl -D FOREGROUND
+```
 
+###apache-config.conf:
 
-
-
-apache-config.conf:
-
+```
 <VirtualHost *:80>
   ServerAdmin me@mydomain.com
   DocumentRoot /var/www/site
@@ -62,28 +66,41 @@ apache-config.conf:
   CustomLog ${APACHE_LOG_DIR}/access.log combined
 
 </VirtualHost>
+```
 
 
+###www/index.php:
 
-www/index.php:
-
-
+```
 <? echo "<p>Hello! Test Working fine?</p>"; ?>
+```
 
+###Docker Image Build:
 
-Docker Image Build:
+```
 
  docker build -t muraliselva10/apache_php .
+```
 
 
-Verifying the working of Docker Image:
+###Verifying the working of Docker Image:
 
+```
 docker run -p 8080:80 -d muraliselva10/apache_php
 
 docker run -i -t -p 8080:80 muraliselva10/apache_php /bin/bash
 apachectl start
-Push to Docker Hub:
+```
+
+###Push to Docker Hub:
+
+```
 docker push muraliselva10/apache_php
-In Openstack:
+```
+
+###In Openstack:
+
+```
 docker pull muraliselva10/apache_php
 docker save muraliselva10/apache_php | openstack image create muraliselva10/apache_php --public --container-format docker --disk-format raw
+```
